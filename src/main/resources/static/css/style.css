@@ -1,0 +1,12 @@
+header,footer,section{
+    padding: 10px 0;
+}
+header ,footer{
+    background: #2c3034;
+}
+#pageContent {
+    margin: 10px 0px;
+}
+a {
+    text-decoration: none;
+}

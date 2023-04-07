@@ -1,11 +1,80 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Spring Security Example</title>
+    <style>
+        body {
+            background-color: #0a53be;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA_Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Title</title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-white "><span th:text="${role.getEmail()}"></span></span> <span
+                        th:text="${role.getRoles()}"> </span></h5>
+            </div>
+            <div class="col">
+                <a href="/logout"><h5 class="text-end text-white nav-link active">logout</h5></a>
+            </div>
+        </div>
+    </div>
+</header>
+<section id="pageContent">
+    <div class="row">
+        <div class="col-2">
+            <div class="d-grid gap-2">
+                <button class="btn btn-link nav-link active" onclick="window.location.href = '/admin';" type="button">
+                    Admin
+                </button>
+                <button class="btn btn-primary" onclick="window.location.href = '/user';" type="button">User</button>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                <h2>User information-page</h2>
+            </div>
+                       <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+                     tabindex="0">
+                    <table class="table caption-top table-striped">
+                        <caption><h3>About user</h3></caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div>
+                            <tr>
+                                <th th:text="${role.getId() }"></th>
+                                <td th:text="${role.getFirstName() }"></td>
+                                <td th:text="${role.getLastName() }"></td>
+                                <td th:text="${role.getAge() }"></td>
+                                <td th:text="${role.getEmail() }"></td>
+                                <td th:text="${role.getRoles().toString() }"></td>
+                            </tr>
+                        </div>
+                        </tbody>
+                    </table>
+                </div>
 
-
+            </div>
+        </div>
+    </div>
+</section>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>
