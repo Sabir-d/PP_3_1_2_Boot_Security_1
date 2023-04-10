@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
-    // аутентификация inMemory
+
     @Bean
     @Override
     public UserDetailsService userDetailsService() {

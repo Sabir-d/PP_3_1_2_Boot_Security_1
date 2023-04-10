@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
@@ -43,26 +42,16 @@ public class ServiceUser implements ru.kata.spring.boot_security.demo.service.Se
     @Transactional
     @Override
     public void save(User user) {
-//
-//        Set<Role> roles = new HashSet<>();
-//        String[] a = role.getName().split(",");
-//        for (int i = 0 ;i<a.length;i++){
-//            String[] b=a[i].split(":");
-//            roles.add(new Role(Long.valueOf(b[0]), b[1]));
-//        }
-//
-//        user.setRoles(roles);
 
+        if (user.getId() != null) {
+            if (user.getRoles().size() == 0) {
+                user.setRoles(findOne(user.getId()).getRoles());
+            }
+            if (!findOne(user.getId()).getPassword().equals(user.getPassword())) {
 
-
-
-
-        if (user.getId()!=null){
-      if (!findOne(user.getId()).getPassword().equals(user.getPassword())) {
-           user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-      }
-        }
-        else{
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            }
+        } else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
 
