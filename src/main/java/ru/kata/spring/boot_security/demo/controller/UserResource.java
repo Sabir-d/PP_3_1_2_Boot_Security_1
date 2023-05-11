@@ -7,6 +7,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.security.SecurityUser;
 import ru.kata.spring.boot_security.demo.service.ServiceUser;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -17,6 +19,10 @@ public class UserResource {
     @Autowired
     public UserResource(ServiceUser userService) {
         this.userService = userService;
+    }
+    @GetMapping("")
+    public List<User> Userall() {
+        return userService.findAll();
     }
 
     @GetMapping("/{userId}")

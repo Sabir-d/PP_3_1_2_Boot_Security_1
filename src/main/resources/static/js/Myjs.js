@@ -2,12 +2,14 @@ $('#userEditDialog').on('shown.bs.modal', function (event) {
     let button = $(event.relatedTarget) // Button that triggered the modal
     let userId = button.data('userid') // Extract info from data-* attributes
     let action = button.data('action')
+
+
     if (userId) {
         $.get({
             url: '/api/v1/user/' + userId,
             success: (data) => {
                 let modal = $(this)
-                if(action=="Delete"){
+                if (action == "Delete") {
                     modal.find('#exampleModalLabel').text("Delete user")
                     modal.find('#user-firstname').attr('disabled', true)
                     modal.find('#user-lastname').attr('disabled', true)
@@ -18,8 +20,7 @@ $('#userEditDialog').on('shown.bs.modal', function (event) {
                     modal.find('#save-user-button').attr('class', "btn btn-danger")
                     modal.find('#save-user-button').text("Delete")
 
-                }
-                else {
+                } else {
                     modal.find('#exampleModalLabel').text("Edit user")
                     modal.find('#user-firstname').attr('disabled', false)
                     modal.find('#user-lastname').attr('disabled', false)
@@ -48,16 +49,28 @@ $('#save-user-button').click(function () {
 
     let modal = $('#userEditDialog')
     let action = modal.find('#save-user-button').text()
-    if (action =="Delete"){
-        let id =modal.find('#user-id').val()
+    let userTable = document.getElementById('tabel_user');
+    let id = modal.find('#user-id').val()
+    let userRow = document.getElementById('user-' + id);
+
+    if (action == "Delete") {
+
+
         $.ajax({
-            url: '/api/v1/user/'+id,
+            url: '/api/v1/user/' + id,
             type: 'DELETE',
 
-            // contentType: "application/json; charset=utf-8",
-            // dataType: "json",
+
             success: () => {
-                location.reload()
+
+
+                if (userRow) {
+                    userTable.deleteRow(userRow.rowIndex);
+                    console.log('Пользователь успешно удален');
+                } else {
+                    console.log('Пользователь не найден');
+                }
+
             },
             error: (err) => {
                 alert(err);
@@ -68,7 +81,7 @@ $('#save-user-button').click(function () {
 
 
     }
-    if (action== "Edit") {
+    if (action == "Edit") {
         let collection = [];
         let rol
         let test = []
@@ -102,55 +115,78 @@ $('#save-user-button').click(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: () => {
-                location.reload()
-            },
-            error: (err) => {
-                alert(err);
+                $.get({
+                    url: '/api/v1/user/' + id,
+                    success: (data) => {
+                        let userName = document.getElementById('userFirstName-' + id)
+                        console.log(userName);
+                        userName.textContent = data.firstName
+                        let userLastName = document.getElementById('userLastName-' + id)
+                        userLastName.textContent = data.lastName
+                        let userAge = document.getElementById('userAge-' + id)
+                        userAge.textContent = data.age
+                        let userEmail = document.getElementById('userEmail-' + id)
+                        userEmail.textContent = data.email
+                        let userRoles = document.getElementById('userRoles-' + id)
+                        let userRole = data.roles
+                        userRoles.innerText="["
+                        const shortenedNames = userRole.map(role => role.name);
+                        userRoles.innerText += shortenedNames.join(', ');
+                        userRoles.innerText+="]"
 
+                    }});
+                        // location.reload()
+                    }
+                    ,
+                    error: (err) => {
+                        alert(err);
+
+                    }
+
+                })
             }
 
         })
-    }
-})
-$('#save-user-button2').click(function () {
-    let newUser = $('#profile-tab-pane')
-    let collection = [];
-    let rol
-    let test = []
-    test = newUser.find("#select-role2").val()
-    for (let i = 0; i < test.length; i++) {
-        collection.push(rol = {
-            id: test[i]
+
+        $('#save-user-button2').click(function () {
+            let newUser = $('#profile-tab-pane')
+            let collection = [];
+            let rol
+            let test = []
+            test = newUser.find("#select-role2").val()
+            for (let i = 0; i < test.length; i++) {
+                collection.push(rol = {
+                    id: test[i]
+
+                })
+            }
+
+
+            let user = {
+
+                firstName: newUser.find('#firstName').val(),
+                lastName: newUser.find('#lastName').val(),
+                age: newUser.find('#age').val(),
+                email: newUser.find('#email').val(),
+                password: newUser.find('#password').val(),
+                roles: collection
+            };
+
+
+            $.ajax({
+                url: '/api/v1/user',
+                type: 'POST',
+                data: JSON.stringify(user),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: () => {
+                    location.reload()
+                },
+                error: (err) => {
+                    alert(err);
+
+                }
+            })
+
 
         })
-    }
-
-
-    let user = {
-
-        firstName: newUser.find('#firstName').val(),
-        lastName: newUser.find('#lastName').val(),
-        age: newUser.find('#age').val(),
-        email: newUser.find('#email').val(),
-        password: newUser.find('#password').val(),
-        roles: collection
-    };
-
-
-    $.ajax({
-        url: '/api/v1/user',
-        type: 'POST',
-        data: JSON.stringify(user),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: () => {
-            location.reload()
-        },
-        error: (err) => {
-            alert(err);
-
-        }
-    })
-
-
-})
